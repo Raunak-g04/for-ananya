@@ -1,0 +1,532 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A Little Something for You</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=DM+Sans:wght@400;500;600&family=Parisienne&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --paper:#f6efe3;
+  --ink:#554438;
+  --muted:#8a7563;
+  --rose:#b77e72;
+  --line:#ddcbb5;
+}
+
+* { box-sizing:border-box; }
+
+body {
+  margin:0;
+  min-height:100vh;
+  color:var(--ink);
+  font-family:"DM Sans",sans-serif;
+  background:
+    radial-gradient(ellipse at 15% 15%,#fffaf0 0,transparent 42%),
+    radial-gradient(ellipse at 85% 85%,#e6d4bf 0,transparent 38%),
+    linear-gradient(135deg,#f3eadc,#e9dac7);
+  overflow-x:hidden;
+}
+
+#player {
+  position:fixed;
+  width:200px;
+  height:200px;
+  left:-220px;
+  top:0;
+  opacity:0.01;
+  pointer-events:none;
+}
+
+.wrap {
+  min-height:100vh;
+  display:grid;
+  place-items:center;
+  padding:28px 16px;
+}
+
+.card {
+  width:min(720px,100%);
+  min-height:560px;
+  padding:clamp(28px,6vw,64px);
+  position:relative;
+  background:rgba(255,250,241,.78);
+  border:1px solid rgba(173,142,111,.48);
+  box-shadow:0 24px 70px rgba(91,65,44,.13);
+  text-align:center;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  overflow:hidden;
+}
+
+.card:before,.card:after {
+  content:"✿";
+  position:absolute;
+  color:#bd9580;
+  opacity:.38;
+  font-size:28px;
+}
+.card:before { top:22px;left:26px; }
+.card:after { bottom:22px;right:26px; }
+
+.eyebrow {
+  font-size:10px;
+  letter-spacing:.28em;
+  text-transform:uppercase;
+  color:var(--muted);
+  margin:0 0 20px;
+}
+
+h1 {
+  font:500 clamp(42px,8vw,68px)/1.05 "Cormorant Garamond",serif;
+  margin:0 0 20px;
+}
+
+.script {
+  font:34px "Parisienne",cursive;
+  color:var(--rose);
+  margin:0 0 16px;
+}
+
+p {
+  font:400 clamp(16px,2.3vw,19px)/1.85 "Cormorant Garamond",serif;
+  max-width:520px;
+  margin:10px auto;
+  color:#665345;
+}
+
+.rule {
+  width:72px;
+  height:1px;
+  background:var(--line);
+  margin:24px auto;
+}
+
+button {
+  border:1px solid #a98170;
+  background:#a98170;
+  color:#fffaf3;
+  border-radius:2px;
+  padding:13px 25px;
+  font:500 11px "DM Sans",sans-serif;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+  cursor:pointer;
+  transition:.25s;
+  margin-top:24px;
+}
+
+button:hover {
+  background:#896556;
+  transform:translateY(-2px);
+}
+
+.page {
+  display:none;
+  animation:appear .8s ease both;
+}
+
+.page.active {
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+}
+
+@keyframes appear {
+  from { opacity:0;transform:translateY(14px); }
+  to { opacity:1;transform:translateY(0); }
+}
+
+.progress {
+  display:flex;
+  gap:8px;
+  justify-content:center;
+  margin-top:32px;
+}
+
+.dot {
+  width:5px;
+  height:5px;
+  border-radius:50%;
+  background:#d9c7b2;
+}
+
+.dot.on { background:#a98170; }
+
+.footer {
+  position:absolute;
+  bottom:16px;
+  left:0;
+  right:0;
+  font-size:10px;
+  letter-spacing:.1em;
+  color:#aa9581;
+}
+
+.music-prompt {
+  position:fixed;
+  z-index:5;
+  left:50%;
+  bottom:22px;
+  transform:translateX(-50%);
+  padding:11px 17px;
+  border:1px solid #c8a28d;
+  background:rgba(255,250,242,.94);
+  color:#806455;
+  font-size:11px;
+  letter-spacing:.08em;
+  cursor:pointer;
+  white-space:nowrap;
+}
+
+.apology-line {
+  font:italic 500 clamp(20px,3vw,25px)/1.6 "Cormorant Garamond",serif;
+  color:#987466;
+  max-width:490px;
+  padding:13px 18px;
+  border-left:1px solid #c8a28d;
+  border-right:1px solid #c8a28d;
+  margin:18px auto;
+}
+
+.final-line {
+  font:500 clamp(26px,5vw,39px)/1.35 "Cormorant Garamond",serif;
+  color:#79594b;
+  margin:12px 0;
+}
+
+.cake {
+  font-size:28px;
+  margin:10px;
+}
+
+@media(max-width:520px) {
+  .card {
+    min-height:620px;
+    padding:34px 24px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div id="player"></div>
+
+<main class="wrap">
+<section class="card">
+
+<!-- PAGE 1 -->
+
+<div class="page active" id="page1">
+
+  <div class="eyebrow">a little note, just for you</div>
+
+  <div class="script">for Ananya</div>
+
+  <h1>Hey, Ananya.</h1>
+
+  <div class="rule"></div>
+
+  <p>
+    Hi Ananya, I know this is a little different
+    from a usual message. I wanted to put my
+    thoughts into something more personal and
+    say a few things that I should have said properly.
+  </p>
+
+  <p>
+    Whenever you're ready, there's something
+    I'd like you to read.
+  </p>
+
+  <button onclick="begin()">
+    Read my note
+  </button>
+
+  <div class="progress">
+    <span class="dot on"></span>
+    <span class="dot"></span>
+    <span class="dot"></span>
+  </div>
+
+</div>
+
+<!-- PAGE 2 -->
+
+<div class="page" id="page2">
+
+  <div class="eyebrow">something I needed to say</div>
+
+  <div class="script">from the heart</div>
+
+  <h1>I'm sorry.</h1>
+
+  <div class="rule"></div>
+
+  <p>
+    I know I made a mistake, and I don't want
+    to hide behind excuses or pretend that it
+    didn't matter. Looking back, I realise I
+    could have handled things so much better.
+  </p>
+
+  <p>
+    I'm truly sorry if my words or actions hurt you.
+    Even if that was never my intention, I understand
+    that it doesn't take away the way it may have
+    made you feel.
+  </p>
+
+  <p class="apology-line">
+    “I'm sorry for coming into your life.
+    Sometimes I worry that I only made things harder,
+    and that I may have ruined something that
+    could have been good.”
+  </p>
+
+  <p>
+    I can't change what happened, but I can
+    acknowledge it, learn from it, and do better.
+    I don't expect you to forget it or respond
+    in any particular way. I just wanted you to
+    know that this apology is genuine.
+  </p>
+
+  <p>
+    Our friendship matters to me, and I'm grateful
+    for the good moments we've shared. I hope,
+    with time, things can feel a little lighter.
+  </p>
+
+  <button onclick="showPage(3)">
+    There's one more thing
+  </button>
+
+  <div class="progress">
+    <span class="dot"></span>
+    <span class="dot on"></span>
+    <span class="dot"></span>
+  </div>
+
+</div>
+
+<!-- PAGE 3 -->
+
+<div class="page" id="page3">
+
+  <div class="eyebrow">and before I go...</div>
+
+  <div class="script">one last little note</div>
+
+  <h1>Thank you.</h1>
+
+  <div class="rule"></div>
+
+  <p>
+    Thank you for the kindness, the conversations,
+    the laughs, and the memories. I genuinely
+    appreciate them more than I may have expressed.
+  </p>
+
+  <div class="cake">🍰</div>
+
+  <div class="final-line">
+    The cake was too good!
+  </div>
+
+  <p>
+    And honestly, I hope life brings you wonderful
+    people, beautiful opportunities, and every
+    bit of happiness you deserve.
+  </p>
+
+  <p class="final-line">
+    All the best for your future.<br>
+    Hope we will meet soon.
+  </p>
+
+  <p style="font-style:italic;color:#9a7a68">
+    Take care, and thank you for everything.
+  </p>
+
+  <div class="progress">
+    <span class="dot"></span>
+    <span class="dot"></span>
+    <span class="dot on"></span>
+  </div>
+
+</div>
+
+<div id="musicPrompt"
+     class="music-prompt"
+     role="button"
+     tabindex="0"
+     aria-label="Start background music">
+
+  ♫ <span id="musicPromptText">
+    Tap here once to start the music
+  </span>
+
+</div>
+
+<div class="footer">
+  made with sincerity ♡
+</div>
+
+</section>
+</main>
+
+<script>
+
+// Your selected YouTube song
+const SONG_VIDEO_ID = "MnUlgGMIaq8";
+
+let ytPlayer = null;
+let playerReady = false;
+let musicStarted = false;
+
+function setPrompt(message) {
+  const t = document.getElementById("musicPromptText");
+  if(t) t.textContent = message;
+}
+
+function loadYouTubeApi() {
+
+  if(window.YT && window.YT.Player) {
+    createPlayer();
+    return;
+  }
+
+  if(!document.getElementById("yt-api")) {
+    const s = document.createElement("script");
+    s.id = "yt-api";
+    s.src = "https://www.youtube.com/iframe_api";
+    document.head.appendChild(s);
+  }
+}
+
+window.onYouTubeIframeAPIReady = function() {
+  createPlayer();
+};
+
+function createPlayer() {
+
+  if(ytPlayer || !window.YT || !window.YT.Player) return;
+
+  ytPlayer = new YT.Player("player", {
+
+    height:"200",
+    width:"200",
+
+    videoId:SONG_VIDEO_ID,
+
+    playerVars:{
+      autoplay:0,
+      controls:0,
+      loop:1,
+      playlist:SONG_VIDEO_ID,
+      playsinline:1,
+      rel:0
+    },
+
+    events:{
+
+      onReady:function() {
+        playerReady = true;
+        ytPlayer.setVolume(75);
+        setPrompt("Tap here once to start the music ♫");
+      },
+
+      onStateChange:function(e) {
+
+        if(e.data === YT.PlayerState.PLAYING) {
+          musicStarted = true;
+          setPrompt("♫ Music is playing");
+        }
+
+      },
+
+      onError:function() {
+        setPrompt("This video cannot be embedded. Choose another song.");
+      }
+
+    }
+
+  });
+}
+
+function startMusic() {
+
+  if(!window.YT || !window.YT.Player) {
+    setPrompt("Loading music… tap again in a moment");
+    loadYouTubeApi();
+    return;
+  }
+
+  if(!ytPlayer) {
+    createPlayer();
+    setPrompt("Loading your song…");
+    return;
+  }
+
+  if(playerReady) {
+    ytPlayer.unMute();
+    ytPlayer.setVolume(75);
+    ytPlayer.playVideo();
+  }
+
+}
+
+function begin() {
+
+  showPage(2);
+
+  if(playerReady && !musicStarted) {
+    ytPlayer.unMute();
+    ytPlayer.setVolume(75);
+    ytPlayer.playVideo();
+  } else if(!playerReady) {
+    setPrompt("Tap here once to start the music ♫");
+  }
+
+}
+
+function showPage(n) {
+
+  document.querySelectorAll(".page").forEach(function(p) {
+    p.classList.remove("active");
+  });
+
+  document.getElementById("page" + n).classList.add("active");
+
+}
+
+const promptEl = document.getElementById("musicPrompt");
+
+promptEl.addEventListener("click",startMusic);
+
+promptEl.addEventListener("keydown",function(e) {
+
+  if(e.key === "Enter" || e.key === " ") {
+    e.preventDefault();
+    startMusic();
+  }
+
+});
+
+window.addEventListener("load",function() {
+  loadYouTubeApi();
+});
+
+</script>
+
+</body>
+</html>
